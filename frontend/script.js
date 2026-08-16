@@ -21,6 +21,8 @@ const audioFileSize = document.getElementById("audio-file-size");
 const audioDuration = document.getElementById("audio-duration");
 const audioPlayer = document.getElementById("audio-player");
 
+
+
 let selectedFile = null;
 
 
@@ -185,6 +187,11 @@ async function analyzeAudio() {
             data.prediction,
             data.confidence
         );
+        addToHistory(
+    selectedFile,
+    data.prediction,
+    data.confidence
+);
 
 
     } catch (error) {
@@ -293,3 +300,170 @@ function formatDuration(seconds) {
 
     return `${minutes}:${String(remainingSeconds).padStart(2, "0")}`;
 }
+/* =========================
+   Analysis History
+   ========================= */
+
+const HISTORY_KEY = "aerovet_analysis_history";
+
+function getHistory() {
+    try {
+        return JSON.parse(
+            localStorage.getItem(HISTORY_KEY)
+        ) || [];
+    } catch (error) {
+        console.error("Could not read analysis history:", error);
+        return [];
+    }
+}
+
+function saveHistory(history) {
+    localStorage.setItem(
+        HISTORY_KEY,
+        JSON.stringify(history)
+    );
+}
+
+function escapeHtml(value) {
+    return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+function formatHistoryTime(timestamp) {
+    return new Date(timestamp).toLocaleString();
+}
+
+function renderHistory() {
+
+    const analysisHistory =
+        document.getElementById("analysis-history");
+
+    if (!analysisHistory) {
+        console.error(
+            "AeroVet: analysis-history element not found."
+        );
+        return;
+    }
+
+    const history = getHistory();
+
+    if (history.length === 0) {
+
+        analysisHistory.innerHTML = `
+            <div class="empty-history">
+                No analyses yet.
+            </div>
+        `;
+
+        return;
+    }
+
+    analysisHistory.innerHTML = history.map(item => {
+
+        const predictionClass =
+            item.prediction.toLowerCase();
+
+        return `
+            <div class="history-item">
+
+                <div class="history-file">
+
+                    <strong>
+                        ${escapeHtml(item.fileName)}
+                    </strong>
+
+                    <div class="history-time">
+                        ${formatHistoryTime(item.timestamp)}
+                    </div>
+
+                </div>
+
+                <span
+                    class="history-prediction ${predictionClass}"
+                >
+                    ${escapeHtml(item.prediction)}
+                </span>
+
+                <div class="history-confidence">
+                    ${Number(item.confidence).toFixed(2)}%
+                </div>
+
+            </div>
+        `;
+
+    }).join("");
+}
+
+function addToHistory(
+    file,
+    predictedClass,
+    confidenceValue
+) {
+
+    if (!file) {
+        console.error("AeroVet: no file supplied to history.");
+        return;
+    }
+
+    const history = getHistory();
+
+    history.unshift({
+        fileName: file.name,
+        prediction: predictedClass,
+        confidence: Number(confidenceValue),
+        timestamp: new Date().toISOString()
+    });
+
+    saveHistory(history.slice(0, 10));
+
+    renderHistory();
+}
+
+
+/* Clear history */
+
+document.addEventListener(
+    "click",
+    function (event) {
+
+        if (
+            event.target &&
+            event.target.id === "clear-history"
+        ) {
+
+            const history = getHistory();
+
+            if (history.length === 0) {
+                return;
+            }
+
+            const confirmed = confirm(
+                "Clear all AeroVet analysis history?"
+            );
+
+            if (!confirmed) {
+                return;
+            }
+
+            localStorage.removeItem(
+                HISTORY_KEY
+            );
+
+            renderHistory();
+        }
+    }
+);
+
+
+/* Initial render */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+        renderHistory();
+    }
+);
