@@ -21,8 +21,6 @@ const audioFileSize = document.getElementById("audio-file-size");
 const audioDuration = document.getElementById("audio-duration");
 const audioPlayer = document.getElementById("audio-player");
 
-
-
 let selectedFile = null;
 
 
@@ -61,27 +59,28 @@ function handleFile(file) {
     }
 
     selectedFile = file;
+
     audioFileName.textContent = file.name;
 
-audioFileSize.textContent =
-    formatFileSize(file.size);
+    audioFileSize.textContent =
+        formatFileSize(file.size);
 
-audioDuration.textContent = "Loading...";
+    audioDuration.textContent = "Loading...";
 
-audioPlayer.src = URL.createObjectURL(file);
+    audioPlayer.src = URL.createObjectURL(file);
 
-audioInfo.classList.remove("hidden");
+    audioInfo.classList.remove("hidden");
 
-audioPlayer.addEventListener(
-    "loadedmetadata",
-    function () {
+    audioPlayer.addEventListener(
+        "loadedmetadata",
+        function () {
 
-        audioDuration.textContent =
-            formatDuration(audioPlayer.duration);
+            audioDuration.textContent =
+                formatDuration(audioPlayer.duration);
 
-    },
-    { once: true }
-);
+        },
+        { once: true }
+    );
 
     fileName.textContent =
         `${file.name} (${formatFileSize(file.size)})`;
@@ -139,7 +138,6 @@ async function analyzeAudio() {
         return;
     }
 
-
     /* Show loading */
 
     analyzeButton.disabled = true;
@@ -187,11 +185,15 @@ async function analyzeAudio() {
             data.prediction,
             data.confidence
         );
+
+
+        /* Save analysis */
+
         addToHistory(
-    selectedFile,
-    data.prediction,
-    data.confidence
-);
+            selectedFile,
+            data.prediction,
+            data.confidence
+        );
 
 
     } catch (error) {
@@ -286,6 +288,8 @@ function formatFileSize(bytes) {
 
     return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
+
+
 function formatDuration(seconds) {
 
     if (!Number.isFinite(seconds)) {
@@ -300,56 +304,88 @@ function formatDuration(seconds) {
 
     return `${minutes}:${String(remainingSeconds).padStart(2, "0")}`;
 }
+
+
 /* =========================
    Analysis History
    ========================= */
 
 const HISTORY_KEY = "aerovet_analysis_history";
 
+
 function getHistory() {
+
     try {
+
         return JSON.parse(
             localStorage.getItem(HISTORY_KEY)
         ) || [];
+
     } catch (error) {
-        console.error("Could not read analysis history:", error);
+
+        console.error(
+            "Could not read analysis history:",
+            error
+        );
+
         return [];
     }
 }
 
+
 function saveHistory(history) {
+
     localStorage.setItem(
         HISTORY_KEY,
         JSON.stringify(history)
     );
 }
 
+
 function escapeHtml(value) {
+
     return String(value)
+
         .replaceAll("&", "&amp;")
+
         .replaceAll("<", "&lt;")
+
         .replaceAll(">", "&gt;")
+
         .replaceAll('"', "&quot;")
+
         .replaceAll("'", "&#039;");
 }
 
+
 function formatHistoryTime(timestamp) {
+
     return new Date(timestamp).toLocaleString();
 }
+
+
+/* --------------------------------------------------
+   Render History
+-------------------------------------------------- */
 
 function renderHistory() {
 
     const analysisHistory =
         document.getElementById("analysis-history");
 
+
     if (!analysisHistory) {
+
         console.error(
             "AeroVet: analysis-history element not found."
         );
+
         return;
     }
 
+
     const history = getHistory();
+
 
     if (history.length === 0) {
 
@@ -362,41 +398,53 @@ function renderHistory() {
         return;
     }
 
-    analysisHistory.innerHTML = history.map(item => {
 
-        const predictionClass =
-            item.prediction.toLowerCase();
+    analysisHistory.innerHTML =
+        history.map(item => {
 
-        return `
-            <div class="history-item">
+            const predictionClass =
+                item.prediction.toLowerCase();
 
-                <div class="history-file">
 
-                    <strong>
-                        ${escapeHtml(item.fileName)}
-                    </strong>
+            return `
+                <div class="history-item">
 
-                    <div class="history-time">
-                        ${formatHistoryTime(item.timestamp)}
+                    <div class="history-file">
+
+                        <strong>
+                            ${escapeHtml(item.fileName)}
+                        </strong>
+
+                        <div class="history-time">
+                            ${formatHistoryTime(item.timestamp)}
+                        </div>
+
+                    </div>
+
+
+                    <span
+                        class="history-prediction ${predictionClass}"
+                    >
+                        ${escapeHtml(item.prediction)}
+                    </span>
+
+
+                    <div class="history-confidence">
+
+                        ${Number(item.confidence).toFixed(2)}%
+
                     </div>
 
                 </div>
+            `;
 
-                <span
-                    class="history-prediction ${predictionClass}"
-                >
-                    ${escapeHtml(item.prediction)}
-                </span>
-
-                <div class="history-confidence">
-                    ${Number(item.confidence).toFixed(2)}%
-                </div>
-
-            </div>
-        `;
-
-    }).join("");
+        }).join("");
 }
+
+
+/* --------------------------------------------------
+   Add Analysis To History
+-------------------------------------------------- */
 
 function addToHistory(
     file,
@@ -405,26 +453,262 @@ function addToHistory(
 ) {
 
     if (!file) {
-        console.error("AeroVet: no file supplied to history.");
+
+        console.error(
+            "AeroVet: no file supplied to history."
+        );
+
         return;
     }
 
+
     const history = getHistory();
 
+
     history.unshift({
+
         fileName: file.name,
+
         prediction: predictedClass,
+
         confidence: Number(confidenceValue),
+
         timestamp: new Date().toISOString()
+
     });
 
-    saveHistory(history.slice(0, 10));
+
+    /*
+     * Keep only the latest 10 analyses.
+     */
+
+    const limitedHistory =
+        history.slice(0, 10);
+
+
+    saveHistory(limitedHistory);
+
+
+    /* Update history */
 
     renderHistory();
+
+
+    /* Update dashboard */
+
+    updateDashboard();
 }
 
 
-/* Clear history */
+/* =========================
+   Dashboard
+   ========================= */
+
+function updateDashboard() {
+
+    const history = getHistory();
+
+
+    /* Total */
+
+    const total =
+        history.length;
+
+
+    /* Category counts */
+
+    const healthy =
+        history.filter(
+            item => item.prediction === "Healthy"
+        ).length;
+
+
+    const unhealthy =
+        history.filter(
+            item => item.prediction === "Unhealthy"
+        ).length;
+
+
+    const noise =
+        history.filter(
+            item => item.prediction === "Noise"
+        ).length;
+
+
+    /* --------------------------------------------------
+       Update count cards
+    -------------------------------------------------- */
+
+    const totalElement =
+        document.getElementById("total-analyses");
+
+    const healthyElement =
+        document.getElementById("healthy-count");
+
+    const unhealthyElement =
+        document.getElementById("unhealthy-count");
+
+    const noiseElement =
+        document.getElementById("noise-count");
+
+
+    if (totalElement) {
+
+        totalElement.textContent =
+            total;
+    }
+
+
+    if (healthyElement) {
+
+        healthyElement.textContent =
+            healthy;
+    }
+
+
+    if (unhealthyElement) {
+
+        unhealthyElement.textContent =
+            unhealthy;
+    }
+
+
+    if (noiseElement) {
+
+        noiseElement.textContent =
+            noise;
+    }
+
+
+    /* --------------------------------------------------
+       Update total label
+    -------------------------------------------------- */
+
+    const distributionTotal =
+        document.getElementById(
+            "distribution-total"
+        );
+
+
+    if (distributionTotal) {
+
+        distributionTotal.textContent =
+            `${total} ${total === 1 ? "analysis" : "analyses"}`;
+    }
+
+
+    /* --------------------------------------------------
+       Calculate percentages
+    -------------------------------------------------- */
+
+    const healthyPercentage =
+        total === 0
+            ? 0
+            : (healthy / total) * 100;
+
+
+    const unhealthyPercentage =
+        total === 0
+            ? 0
+            : (unhealthy / total) * 100;
+
+
+    const noisePercentage =
+        total === 0
+            ? 0
+            : (noise / total) * 100;
+
+
+    /* --------------------------------------------------
+       Update percentage text
+    -------------------------------------------------- */
+
+    const healthyPercentageElement =
+        document.getElementById(
+            "healthy-percentage"
+        );
+
+
+    const unhealthyPercentageElement =
+        document.getElementById(
+            "unhealthy-percentage"
+        );
+
+
+    const noisePercentageElement =
+        document.getElementById(
+            "noise-percentage"
+        );
+
+
+    if (healthyPercentageElement) {
+
+        healthyPercentageElement.textContent =
+            `${healthyPercentage.toFixed(0)}%`;
+    }
+
+
+    if (unhealthyPercentageElement) {
+
+        unhealthyPercentageElement.textContent =
+            `${unhealthyPercentage.toFixed(0)}%`;
+    }
+
+
+    if (noisePercentageElement) {
+
+        noisePercentageElement.textContent =
+            `${noisePercentage.toFixed(0)}%`;
+    }
+
+
+    /* --------------------------------------------------
+       Update progress bars
+    -------------------------------------------------- */
+
+    const healthyBar =
+        document.getElementById(
+            "healthy-bar"
+        );
+
+
+    const unhealthyBar =
+        document.getElementById(
+            "unhealthy-bar"
+        );
+
+
+    const noiseBar =
+        document.getElementById(
+            "noise-bar"
+        );
+
+
+    if (healthyBar) {
+
+        healthyBar.style.width =
+            `${healthyPercentage}%`;
+    }
+
+
+    if (unhealthyBar) {
+
+        unhealthyBar.style.width =
+            `${unhealthyPercentage}%`;
+    }
+
+
+    if (noiseBar) {
+
+        noiseBar.style.width =
+            `${noisePercentage}%`;
+    }
+}
+
+
+/* --------------------------------------------------
+   Clear history
+-------------------------------------------------- */
 
 document.addEventListener(
     "click",
@@ -435,35 +719,55 @@ document.addEventListener(
             event.target.id === "clear-history"
         ) {
 
-            const history = getHistory();
+            const history =
+                getHistory();
+
 
             if (history.length === 0) {
                 return;
             }
 
-            const confirmed = confirm(
-                "Clear all AeroVet analysis history?"
-            );
+
+            const confirmed =
+                confirm(
+                    "Clear all AeroVet analysis history?"
+                );
+
 
             if (!confirmed) {
                 return;
             }
 
+
             localStorage.removeItem(
                 HISTORY_KEY
             );
 
+
+            /* Update history */
+
             renderHistory();
+
+
+            /* Reset dashboard */
+
+            updateDashboard();
         }
     }
 );
 
 
-/* Initial render */
+/* --------------------------------------------------
+   Initial render
+-------------------------------------------------- */
 
 document.addEventListener(
     "DOMContentLoaded",
     function () {
+
         renderHistory();
+
+        updateDashboard();
+
     }
 );

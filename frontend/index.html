@@ -1,34 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>AeroVet | Poultry Vocalization Detection</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <link rel="stylesheet" href="style.css">
+    <title>
+        AeroVet | Poultry Vocalization Detection
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
 </head>
+
 
 <body>
 
+
+    <!-- =========================
+         Header
+    ========================== -->
+
     <header class="header">
+
         <div class="brand">
-            <div class="logo">🐔</div>
+
+            <div class="logo">
+                🐔
+            </div>
 
             <div>
-                <h1>AeroVet</h1>
-                <p>Poultry Vocalization Intelligence</p>
+
+                <h1>
+                    AeroVet
+                </h1>
+
+                <p>
+                    Poultry Vocalization Intelligence
+                </p>
+
             </div>
+
         </div>
 
+
         <div class="status">
+
             <span class="status-dot"></span>
+
             API Ready
+
         </div>
+
     </header>
 
 
+
+    <!-- =========================
+         Main Content
+    ========================== -->
+
     <main class="container">
+
+
+        <!-- =========================
+             Hero
+        ========================== -->
 
         <section class="hero">
 
@@ -44,9 +89,11 @@
                 </h2>
 
                 <p class="description">
+
                     Upload a chicken vocalization recording and
                     AeroVet will analyze the audio using a
                     trained deep-learning model.
+
                 </p>
 
             </div>
@@ -54,20 +101,32 @@
         </section>
 
 
+
+        <!-- =========================
+             Audio Analysis
+        ========================== -->
+
         <section class="analysis-card">
 
             <div class="card-header">
 
                 <div>
-                    <h3>Audio Analysis</h3>
+
+                    <h3>
+                        Audio Analysis
+                    </h3>
 
                     <p>
                         Upload a WAV recording to begin analysis.
                     </p>
+
                 </div>
 
             </div>
 
+
+
+            <!-- Upload Area -->
 
             <div
                 id="drop-zone"
@@ -78,13 +137,16 @@
                     🎵
                 </div>
 
+
                 <h4>
                     Drop your audio file here
                 </h4>
 
+
                 <p>
                     or select a WAV recording from your computer
                 </p>
+
 
                 <label
                     for="audio-file"
@@ -93,6 +155,7 @@
                     Choose WAV File
                 </label>
 
+
                 <input
                     id="audio-file"
                     type="file"
@@ -100,42 +163,82 @@
                     hidden
                 >
 
+
                 <p
                     id="file-name"
                     class="file-name"
                 >
                     No file selected
                 </p>
-<div id="audio-info" class="audio-info hidden">
 
-    <div class="audio-details">
 
-        <div>
-            <span>File</span>
-            <strong id="audio-file-name">-</strong>
-        </div>
 
-        <div>
-            <span>Size</span>
-            <strong id="audio-file-size">-</strong>
-        </div>
+                <!-- Audio Information -->
 
-        <div>
-            <span>Duration</span>
-            <strong id="audio-duration">-</strong>
-        </div>
+                <div
+                    id="audio-info"
+                    class="audio-info hidden"
+                >
 
-    </div>
+                    <div class="audio-details">
 
-    <audio
-        id="audio-player"
-        controls
-        preload="metadata"
-    ></audio>
 
-</div>
+                        <div>
+
+                            <span>
+                                File
+                            </span>
+
+                            <strong id="audio-file-name">
+                                -
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                Size
+                            </span>
+
+                            <strong id="audio-file-size">
+                                -
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                Duration
+                            </span>
+
+                            <strong id="audio-duration">
+                                -
+                            </strong>
+
+                        </div>
+
+
+                    </div>
+
+
+                    <audio
+                        id="audio-player"
+                        controls
+                        preload="metadata"
+                    ></audio>
+
+
+                </div>
+
             </div>
 
+
+
+            <!-- Analyze Button -->
 
             <button
                 id="analyze-button"
@@ -146,32 +249,45 @@
             </button>
 
 
+
+            <!-- Loading -->
+
             <div
                 id="loading"
                 class="loading hidden"
             >
+
                 <div class="spinner"></div>
 
                 <p>
                     Analyzing vocalization...
                 </p>
+
             </div>
 
+
+
+            <!-- Result -->
 
             <div
                 id="result"
                 class="result hidden"
             >
 
+
                 <div class="result-header">
+
                     <p class="result-label">
                         AI Prediction
                     </p>
 
+
                     <span id="prediction-badge">
                         -
                     </span>
+
                 </div>
+
 
 
                 <div class="prediction">
@@ -180,12 +296,16 @@
                         -
                     </h3>
 
+
                     <p>
                         Model confidence
                     </p>
 
                 </div>
 
+
+
+                <!-- Confidence -->
 
                 <div class="confidence-container">
 
@@ -194,6 +314,7 @@
                         <span>
                             Confidence
                         </span>
+
 
                         <strong id="confidence">
                             0%
@@ -214,23 +335,37 @@
                 </div>
 
 
+
+                <!-- Result Note -->
+
                 <div class="result-note">
 
-                    <strong>Analysis complete</strong>
+                    <strong>
+                        Analysis complete
+                    </strong>
 
                     <p>
+
                         This prediction is generated from the
                         uploaded poultry vocalization.
+
                     </p>
 
                 </div>
+
 
             </div>
 
         </section>
 
 
+
+        <!-- =========================
+             Information Cards
+        ========================== -->
+
         <section class="info-grid">
+
 
             <div class="info-card">
 
@@ -243,11 +378,14 @@
                 </h3>
 
                 <p>
+
                     Vocalization recordings are converted into
                     mel-spectrogram representations for analysis.
+
                 </p>
 
             </div>
+
 
 
             <div class="info-card">
@@ -261,11 +399,14 @@
                 </h3>
 
                 <p>
+
                     A convolutional neural network analyzes the
                     vocalization patterns.
+
                 </p>
 
             </div>
+
 
 
             <div class="info-card">
@@ -279,16 +420,293 @@
                 </h3>
 
                 <p>
+
                     The trained model provides a prediction and
                     confidence score through the AeroVet API.
+
                 </p>
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- =========================
+             Dashboard
+        ========================== -->
+
+        <section class="dashboard-section">
+
+
+            <!-- Dashboard Header -->
+
+            <div class="section-heading">
+
+                <div>
+
+                    <p class="eyebrow">
+                        OVERVIEW
+                    </p>
+
+                    <h2>
+                        Analysis Dashboard
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- Dashboard Statistics -->
+
+            <div class="dashboard-stats">
+
+
+                <!-- Total -->
+
+                <div class="stat-card">
+
+                    <span class="stat-label">
+                        Total Analyses
+                    </span>
+
+                    <strong id="total-analyses">
+                        0
+                    </strong>
+
+                </div>
+
+
+
+                <!-- Healthy -->
+
+                <div class="stat-card healthy-stat">
+
+                    <span class="stat-label">
+                        Healthy
+                    </span>
+
+                    <strong id="healthy-count">
+                        0
+                    </strong>
+
+                </div>
+
+
+
+                <!-- Unhealthy -->
+
+                <div class="stat-card unhealthy-stat">
+
+                    <span class="stat-label">
+                        Unhealthy
+                    </span>
+
+                    <strong id="unhealthy-count">
+                        0
+                    </strong>
+
+                </div>
+
+
+
+                <!-- Noise -->
+
+                <div class="stat-card noise-stat">
+
+                    <span class="stat-label">
+                        Noise
+                    </span>
+
+                    <strong id="noise-count">
+                        0
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =========================
+                 Analysis Distribution
+            ========================== -->
+
+            <div class="distribution-card">
+
+
+                <div class="distribution-header">
+
+                    <h3>
+                        Analysis Distribution
+                    </h3>
+
+                    <span id="distribution-total">
+                        0 analyses
+                    </span>
+
+                </div>
+
+
+
+                <!-- Healthy -->
+
+                <div class="distribution-row">
+
+                    <div class="distribution-label">
+
+                        <span>
+                            Healthy
+                        </span>
+
+                        <strong id="healthy-percentage">
+                            0%
+                        </strong>
+
+                    </div>
+
+
+                    <div class="distribution-bar">
+
+                        <div
+                            id="healthy-bar"
+                            class="distribution-fill healthy-fill"
+                            style="width: 0%"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Unhealthy -->
+
+                <div class="distribution-row">
+
+                    <div class="distribution-label">
+
+                        <span>
+                            Unhealthy
+                        </span>
+
+                        <strong id="unhealthy-percentage">
+                            0%
+                        </strong>
+
+                    </div>
+
+
+                    <div class="distribution-bar">
+
+                        <div
+                            id="unhealthy-bar"
+                            class="distribution-fill unhealthy-fill"
+                            style="width: 0%"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Noise -->
+
+                <div class="distribution-row">
+
+                    <div class="distribution-label">
+
+                        <span>
+                            Noise
+                        </span>
+
+                        <strong id="noise-percentage">
+                            0%
+                        </strong>
+
+                    </div>
+
+
+                    <div class="distribution-bar">
+
+                        <div
+                            id="noise-bar"
+                            class="distribution-fill noise-fill"
+                            style="width: 0%"
+                        ></div>
+
+                    </div>
+
+                </div>
+
 
             </div>
 
         </section>
 
+
+
+        <!-- =========================
+             Analysis History
+        ========================== -->
+
+        <section class="history-section">
+
+
+            <div class="section-heading">
+
+                <div>
+
+                    <p class="eyebrow">
+                        ACTIVITY
+                    </p>
+
+                    <h2>
+                        Recent Analyses
+                    </h2>
+
+                </div>
+
+
+                <button
+                    id="clear-history"
+                    class="clear-history-button"
+                    type="button"
+                >
+                    Clear History
+                </button>
+
+            </div>
+
+
+
+            <div
+                id="analysis-history"
+                class="analysis-history"
+            >
+
+                <div class="empty-history">
+                    No analyses yet.
+                </div>
+
+            </div>
+
+
+        </section>
+
+
     </main>
 
+
+
+    <!-- =========================
+         Footer
+    ========================== -->
 
     <footer>
 
@@ -299,34 +717,12 @@
     </footer>
 
 
+
+    <!-- JavaScript -->
+
     <script src="script.js"></script>
 
+
 </body>
-<section class="history-section">
 
-    <div class="section-heading">
-        <div>
-            <p class="eyebrow">ACTIVITY</p>
-            <h2>Recent Analyses</h2>
-        </div>
-
-        <button
-            id="clear-history"
-            class="clear-history-button"
-            type="button"
-        >
-            Clear History
-        </button>
-    </div>
-
-    <div id="analysis-history" class="analysis-history">
-
-        <div id="empty-history" class="empty-history">
-            No analyses yet.
-        </div>
-
-    </div>
-
-</section>
-</body>
 </html>
