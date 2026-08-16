@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AeroVet | Poultry Vocalization Detection</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header class="header">
+        <div class="brand">
+            <div class="logo">🐔</div>
+
+            <div>
+                <h1>AeroVet</h1>
+                <p>Poultry Vocalization Intelligence</p>
+            </div>
+        </div>
+
+        <div class="status">
+            <span class="status-dot"></span>
+            API Ready
+        </div>
+    </header>
+
+
+    <main class="container">
+
+        <section class="hero">
+
+            <div class="hero-text">
+
+                <p class="eyebrow">
+                    AI-POWERED POULTRY HEALTH MONITORING
+                </p>
+
+                <h2>
+                    Detect poultry health
+                    <span>through sound.</span>
+                </h2>
+
+                <p class="description">
+                    Upload a chicken vocalization recording and
+                    AeroVet will analyze the audio using a
+                    trained deep-learning model.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <section class="analysis-card">
+
+            <div class="card-header">
+
+                <div>
+                    <h3>Audio Analysis</h3>
+
+                    <p>
+                        Upload a WAV recording to begin analysis.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div
+                id="drop-zone"
+                class="drop-zone"
+            >
+
+                <div class="upload-icon">
+                    🎵
+                </div>
+
+                <h4>
+                    Drop your audio file here
+                </h4>
+
+                <p>
+                    or select a WAV recording from your computer
+                </p>
+
+                <label
+                    for="audio-file"
+                    class="choose-button"
+                >
+                    Choose WAV File
+                </label>
+
+                <input
+                    id="audio-file"
+                    type="file"
+                    accept=".wav,audio/wav"
+                    hidden
+                >
+
+                <p
+                    id="file-name"
+                    class="file-name"
+                >
+                    No file selected
+                </p>
+<div id="audio-info" class="audio-info hidden">
+
+    <div class="audio-details">
+
+        <div>
+            <span>File</span>
+            <strong id="audio-file-name">-</strong>
+        </div>
+
+        <div>
+            <span>Size</span>
+            <strong id="audio-file-size">-</strong>
+        </div>
+
+        <div>
+            <span>Duration</span>
+            <strong id="audio-duration">-</strong>
+        </div>
+
+    </div>
+
+    <audio
+        id="audio-player"
+        controls
+        preload="metadata"
+    ></audio>
+
+</div>
+            </div>
+
+
+            <button
+                id="analyze-button"
+                class="analyze-button"
+                disabled
+            >
+                Analyze Recording
+            </button>
+
+
+            <div
+                id="loading"
+                class="loading hidden"
+            >
+                <div class="spinner"></div>
+
+                <p>
+                    Analyzing vocalization...
+                </p>
+            </div>
+
+
+            <div
+                id="result"
+                class="result hidden"
+            >
+
+                <div class="result-header">
+                    <p class="result-label">
+                        AI Prediction
+                    </p>
+
+                    <span id="prediction-badge">
+                        -
+                    </span>
+                </div>
+
+
+                <div class="prediction">
+
+                    <h3 id="prediction">
+                        -
+                    </h3>
+
+                    <p>
+                        Model confidence
+                    </p>
+
+                </div>
+
+
+                <div class="confidence-container">
+
+                    <div class="confidence-info">
+
+                        <span>
+                            Confidence
+                        </span>
+
+                        <strong id="confidence">
+                            0%
+                        </strong>
+
+                    </div>
+
+
+                    <div class="confidence-bar">
+
+                        <div
+                            id="confidence-fill"
+                            class="confidence-fill"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="result-note">
+
+                    <strong>Analysis complete</strong>
+
+                    <p>
+                        This prediction is generated from the
+                        uploaded poultry vocalization.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <section class="info-grid">
+
+            <div class="info-card">
+
+                <div class="info-icon">
+                    🎙️
+                </div>
+
+                <h3>
+                    Audio Analysis
+                </h3>
+
+                <p>
+                    Vocalization recordings are converted into
+                    mel-spectrogram representations for analysis.
+                </p>
+
+            </div>
+
+
+            <div class="info-card">
+
+                <div class="info-icon">
+                    🧠
+                </div>
+
+                <h3>
+                    Deep Learning
+                </h3>
+
+                <p>
+                    A convolutional neural network analyzes the
+                    vocalization patterns.
+                </p>
+
+            </div>
+
+
+            <div class="info-card">
+
+                <div class="info-icon">
+                    ⚡
+                </div>
+
+                <h3>
+                    Fast Results
+                </h3>
+
+                <p>
+                    The trained model provides a prediction and
+                    confidence score through the AeroVet API.
+                </p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <footer>
+
+        <p>
+            AeroVet Prototype • AI-assisted poultry health monitoring
+        </p>
+
+    </footer>
+
+
+    <script src="script.js"></script>
+
+</body>
+</html>
