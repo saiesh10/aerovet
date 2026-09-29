@@ -779,24 +779,21 @@
                 </h2>
 
                 <p>
-                    Download a summary of your AeroVet
-                    analysis history.
+                    Download a comprehensive PDF report of your AeroVet flock acoustic surveillance and health analyses.
                 </p>
 
                 <button
                     id="export-report"
                     class="export-report-button"
                     type="button"
+                    onclick="exportReport()"
                 >
-                    📄 Export Report
+                    📑 Export PDF Report
                 </button>
 
             </div>
 
         </section>
-
-
-        
 
 
     <!-- ==================================================
@@ -813,10 +810,13 @@
 
 
     <!-- ==================================================
-         JAVASCRIPT
+         LIBRARIES & JAVASCRIPT
     ================================================== -->
 
-    <script src="script.js"></script>
+    <!-- jsPDF Native Vector PDF Engine -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <script src="script.js?v=3.0"></script>
 
 </body>
 
